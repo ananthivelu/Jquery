@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    // add to do list script
+var i=1;
+$(document).on('click','.add-todo',function(){
+var todoInputData=$(this).siblings('input').val();
+var todoListData=`<div class="row-parent">
+  <div class="list-row">
+  <div class="list-num">`+i+`.</div>
+  <div class="list-data">`+ todoInputData+`</div>
+  <div class="edit-todo">&#9998;</div>
+  <div class="remove-todo">&#x2715;</div>
+  </div>
+  <div class="list-error"></div></div>`;
+
+if($.trim(todoInputData)=='')
+{
+$(this).parents('.todo-content').find('.error').text('Please enter something!');
+}
+else{
+$(this).parents('.todo-content').find('.todo-list').append(todoListData);
+i++
+$(this).parents('.todo-content').find('.error').empty();
+}
+$(this).siblings('input').val('')
+});
+
+// add todo list on pressing Enter key 
+$(document).keydown(function (event) { 
+     if (event.which == 13) { 
+         event.preventDefault();
+         $('.add-todo').click(); 
+         
+     } 
+});
+// removing todo list script
+$(document).on('click','.remove-todo',function(){
+ $(this).parent('.list-row').remove();
+})
+
+// editing todo list script
+ $(document).on('click','.edit-todo',function(){
+ $(this).attr('class','update-todo');
+ $(this).html('&#x2713;');  //tick icon
+ var listText= $(this).parent('.list-row').find('.list-data').html();
+ var listDataHeight=$(this).parent('.list-row').find('.list-data').innerHeight();
+ $(this).parent('.list-row').find('.list-data').attr('class','update-data');
+
+ if(listDataHeight>50){
+  $(this).parent('.list-row').find('.update-data').html('<textarea style="height:'+listDataHeight+'px">'+listText+'</textarea>');
+ }else{
+  $(this).parent('.list-row').find('.update-data').html('<textarea style="height:'+listDataHeight+'px">'+listText+'</textarea>');
+ }
+
+});
+
+//update todo script
+$(document).on('click','.update-todo',function(){
+ var listText= $(this).parent('.list-row').find('textarea').val();
+ if($.trim(listText)=='')
+  {
+   $(this).parents('.row-parent').find('.list-error').text('Please enter something');
+  }else{
+   $(this).attr('class','edit-todo');
+   $(this).html('&#9998;');  //unicode for editing
+   $(this).parent('.list-row').find('.update-data').attr('class','list-data');
+   var listText= $(this).parent('.list-row').find('.list-data').html(listText);
+   $(this).parents('.row-parent').find('.list-error').empty();
+}
+});
+
+// line through the  todo list script
+$(document).on('click','.list-data',function(){
+ $(this).toggleClass('line-through');
+});
+</script>
+<style>
+    html { 
+   background: url("https://image.freepik.com/free-photo/yellow-list-top-view_23-2148475388.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.todo-content{
+    width: 50%;
+    border: 2px solid rgb(5, 0, 0);
+    padding: 30px;
+    margin: 100px;
+    
+  }
+  .todo-input{
+    display:flex;
+    width:100%;
+    margin-bottom:10px;
+  }
+  .todo-input input{
+    width: 100%;
+    padding: 5px 5px;
+    height: 30px;
+    border: 2px solid #0c0101;
+    font-size: 18px;
+  }
+  .todo-input input:focus{
+    outline:unset;
+  }
+  .list-row textarea:focus{
+    outline:unset;
+  }
+  .list-row textarea{
+    width:100%;
+    background:transparent;
+    border:none;
+    color:green;
+    font-size:17px;
+  }
+  .list-row textarea:focus{
+    outline:unset;
+  }
+  
+  .todo-input button{
+    padding: 5px 30px;
+    background: #c5c5c5;
+    color: white;
+    border: 2.5px solid #070101;
+    cursor: pointer;
+    transition:.5s;
+    font-size:18px;
+  }
+  .todo-input button:hover{
+    background:#050000;
+  }
+  .todo-input button:focus{
+    outline:unset;
+  }
+  .line-through{
+    text-decoration:line-through;
+  }
+  .right{
+    float:left
+  }
+  .edit-todo,.update-todo,.remove-todo{
+    padding: 0px 5px;
+    cursor:pointer;
+  }
+  .list-num{
+    font-weight:bold;
+    padding-right:5px;
+  }
+  .todo-content .todo-list{
+    list-style-type: none;
+    padding-left: 0px;
+    background: #f9f9f9;
+  }
+  .todo-content .list-error,.error{
+    color:rgb(2, 0, 7);
+    font: size 20px;
+    font-weight: bold;
+  }
+  .todo-content .todo-list .list-row{
+    padding:5px 10px;
+    position:relative;
+    word-break: break-all;
+    display:flex;
+    font-size:18px;
+    transition:.1s;
+    cursor:pointer; 
+  }
+  .todo-content .list-row .list-data,.todo-content .list-row .update-data{
+    width:100%;
+    text-align:justify;
+  }
+  .todo-content .todo-list .list-row:nth-child(even){
+    background:#e4e4e4;
+  }
+  .todo-list .edit-todo,.remove-todo,.update-todo{
+    visibility:hidden;
+  }
+  .todo-content .todo-list .list-row:hover{
+    background:#d8d8d8;
+  }
+  .todo-content .todo-list .list-row:hover .edit-todo{
+    visibility:visible;
+  }
+  .todo-content .todo-list .list-row:hover .remove-todo{
+    visibility:visible;
+  }
+  .todo-content .todo-list .list-row:hover .update-todo{
+    visibility:visible;
+  }
+</style>
+</head>
+<body>
+<!--===first todo list ====-->
+<div class="todo-content">
+<h2 style="text-align:center">TO DO List App</h2>
+<div class="todo-input">
+<input type="text" Placeholder="Please Enter Something!">
+<button class="add-todo">Add</button>
+</div>
+<div class="error"></div>
+<div class="todo-list">
+</div>
+</div>
+<!--===first todo list ====-->
+</body>
+</html>
